@@ -15,8 +15,7 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
         user=os.getenv("PERSONAL_DATA_DB_USERNAME", "root"),
         password=os.getenv("PERSONAL_DATA_DB_PASSWORD", ""),
         host=os.getenv("PERSONAL_DATA_DB_HOST", "localhost"),
-        database=os.getenv("PERSONAL_DATA_DB_NAME"),
-        port=3306
+        database=os.getenv("PERSONAL_DATA_DB_NAME")
     )
 
 
@@ -70,3 +69,29 @@ class RedactingFormatter(logging.Formatter):
             super(RedactingFormatter, self).format(record),
             RedactingFormatter.SEPARATOR
         )
+
+
+def main() -> None:
+    """main function"""
+    cnx = get_db()
+    info_logger = get_logger()
+    fields = "name,email,phone,ssn,password,ip,last_login,user_agent"
+    columns = fields.split(',')
+    query = f"SELECT {fields} FROM users;"
+
+    with cnx.cursor() as cursor:
+        cursor.execute(query)
+        rows = cursor.fetchall()
+        for row in rows:
+            record = map(
+                lambda m: f"{m[0]}={m[1]}",
+                zip(columns, row)
+            )
+            msg = f"{('; '.join(list(record)))}"
+            args = ("user_data", logging.INFO, None, None, msg, None, None)
+            log_record = logging.LogRecord(*args)
+            info_logger.handle(log_record)
+
+
+if __name__ == "__main__":
+    main()
