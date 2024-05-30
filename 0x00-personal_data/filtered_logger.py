@@ -1,14 +1,26 @@
 #!/usr/bin/env python3
 """Module that filters and obfuscates log message"""
-import logging
+import os
 import re
+import logging
 from typing import List
+import mysql.connector
 
 PII_FIELDS = ("name", "email", "phone", "ssn", "password")
 
 
+def get_db() -> mysql.connector.connection.MySQLConnection:
+    """Connect to and return database connector object"""
+    return mysql.connector.connect(
+        user=os.getenv("PERSONAL_DATA_DB_USERNAME", "root"),
+        password=os.getenv("PERSONAL_DATA_DB_PASSWORD", ""),
+        host=os.getenv("PERSONAL_DATA_DB_HOST", "localhost"),
+        database=os.getenv("PERSONAL_DATA_DB_NAME")
+    )
+
+
 def get_logger() -> logging.Logger:
-    """Returns a logger object"""
+    """Create and return a logger object"""
     logger = logging.getLogger("user_data")
     logger.setLevel(logging.INFO)
     stream_handler = logging.StreamHandler()
