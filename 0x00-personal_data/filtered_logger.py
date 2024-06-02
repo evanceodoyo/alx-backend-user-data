@@ -11,12 +11,17 @@ PII_FIELDS = ("name", "email", "phone", "ssn", "password")
 
 def get_db() -> mysql.connector.connection.MySQLConnection:
     """Connect and return database connector object"""
-    return mysql.connector.connect(
-        user=os.getenv("PERSONAL_DATA_DB_USERNAME", "root"),
-        password=os.getenv("PERSONAL_DATA_DB_PASSWORD", ""),
-        host=os.getenv("PERSONAL_DATA_DB_HOST", "localhost"),
-        database=os.getenv("PERSONAL_DATA_DB_NAME")
+    usr = os.getenv("PERSONAL_DATA_DB_USERNAME", "root")
+    pwd = os.getenv("PERSONAL_DATA_DB_PASSWORD", "")
+    hst = os.getenv("PERSONAL_DATA_DB_HOST", "localhost")
+    db = os.getenv("PERSONAL_DATA_DB_NAME")
+    cnx = mysql.connector.connect(
+        user=usr,
+        password=pwd,
+        host=hst,
+        database=db
     )
+    return cnx
 
 
 def get_logger() -> logging.Logger:
