@@ -13,9 +13,15 @@ class Auth:
         path: str,
         excluded_paths: List[str]
     ) -> bool:
-        """public method
+        """Checks if path is not in excluded paths and returns bool
         """
-        return False
+        if path is None or excluded_paths is None or len(excluded_paths) == 0:
+            return True
+
+        if not path.endswith('/'):
+            path += '/'
+
+        return not (path in excluded_paths)
 
     def authorization_header(self, request=None) -> str:
         """public method
