@@ -12,7 +12,7 @@ class BasicAuth(Auth):
         self,
         authorization_header: str
     ) -> str:
-        """Returns the base64 part of the Authorization header for
+        """Returns the Base64 part of the Authorization header for
         Basic authentication.
         """
         if (
@@ -27,7 +27,7 @@ class BasicAuth(Auth):
         self,
         base64_authorization_header: str
     ) -> str:
-        """Returns the decoded value of a base64 string of the
+        """Returns the decoded value of a Base64 string of the
         authorization header.
         """
         try:
@@ -41,3 +41,18 @@ class BasicAuth(Auth):
             return decoded_bytes.decode('utf-8')
         except Exception:
             return None
+
+    def extract_user_credentials(
+        self,
+        decoded_base64_authorization_header: str
+    ) -> (str, str):
+        """Returns user email and password from Base64 decoded value as a tuple.
+        """
+        if (
+            decoded_base64_authorization_header is None or
+            not isinstance(decoded_base64_authorization_header, str) or
+            ":" not in decoded_base64_authorization_header
+        ):
+            return (None, None)
+
+        return tuple(decoded_base64_authorization_header.split(":"))
