@@ -21,7 +21,14 @@ class Auth:
         if not path.endswith('/'):
             path += '/'
 
-        return path not in excluded_paths
+        for p in excluded_paths:
+            if p.endswith("*"):
+                if path.startswith(p[:-1]):
+                    return False
+            elif path == p:
+                return False
+
+        return True
 
     def authorization_header(self, request=None) -> str:
         """Validate all requests to secure the API
