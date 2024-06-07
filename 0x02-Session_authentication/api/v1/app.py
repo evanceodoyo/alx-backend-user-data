@@ -46,10 +46,10 @@ def before_req():
         return
 
     if auth.authorization_header(request) is None:
-        abort(403)
+        abort(401)
 
     if auth.session_cookie(request) is None:
-        abort(403)
+        abort(401)
 
     if auth.current_user(request) is None:
         abort(403)
