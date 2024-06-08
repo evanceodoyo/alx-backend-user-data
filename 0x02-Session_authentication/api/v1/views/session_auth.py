@@ -34,9 +34,8 @@ def session_auth() -> str:
     if not user.is_valid_password(password):
         return jsonify({"error": "wrong password"})
 
-    from api.v1.auth import session_auth
+    from api.v1.app import auth
 
-    auth = session_auth.SessionAuth()
     session_id = auth.create_session(user.id)
     res = jsonify(user.to_json())
     res.set_cookie(os.getenv("SESSION_NAME"), session_id)
