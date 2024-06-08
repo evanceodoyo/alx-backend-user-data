@@ -23,8 +23,10 @@ def session_auth() -> str:
         return jsonify({"error": "email missing"}), 400
     if password is None:
         return jsonify({"error": "password missing"}), 400
-
-    users = User.search({"email": email})
+    try:
+        users = User.search({"email": email})
+    except Exception:
+        return jsonify({"error": "no user found for this email"}), 404
     if len(users) == 0:
         return jsonify({"error": "no user found for this email"}), 404
 
