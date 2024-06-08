@@ -8,7 +8,7 @@ from models.user import User
 
 
 @app_views.route('/auth_session/login', methods=['POST'], strict_slashes=False)
-def session_auth() -> str:
+def login() -> str:
     """ POST /api/v1/auth_session/login
     JSON body:
       - email
@@ -32,7 +32,7 @@ def session_auth() -> str:
 
     user = users[0]
     if not user.is_valid_password(password):
-        return jsonify({"error": "wrong password"})
+        return jsonify({"error": "wrong password"}), 401
 
     from api.v1.app import auth
 
@@ -40,3 +40,16 @@ def session_auth() -> str:
     res = jsonify(user.to_json())
     res.set_cookie(os.getenv("SESSION_NAME"), session_id)
     return res
+
+
+@app_views.route('/auth_session/logout', methods=['DELETE'],
+                 strict_slashes=False)
+def logout() -> str:
+    """ POST /api/v1/auth_session/logout
+    Deletes session
+    """
+    from api.v1.app import auth
+
+    if auth.destroy_session(request) is False:
+        abort(404)
+    return jsonify({}), 200
