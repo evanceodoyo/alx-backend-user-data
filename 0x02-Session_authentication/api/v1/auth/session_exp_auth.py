@@ -13,11 +13,9 @@ class SessionExpAuth(SessionAuth):
         """Initialize.
         """
         try:
-            exp_val = int(os.getenv("SESSION_DURATION"))
+            self.session_duration = int(os.getenv("SESSION_DURATION", 0))
         except ValueError:
-            exp_val = 0
-        finally:
-            self.session_duration = exp_val
+            self.session_duration = 0
 
     def create_session(self, user_id: str = None) -> str:
         """Create session.
