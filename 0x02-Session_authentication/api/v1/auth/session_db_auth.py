@@ -13,6 +13,8 @@ class SessionDBAuth(SessionExpAuth):
         """Returns session ID for a user session.
         """
         session_id = super().create_session(user_id)
+        if session_id is None:
+            return None
         user_session = UserSession(**{"user_id": user_id,
                                       "session_id": session_id})
         user_session.save()
@@ -45,4 +47,4 @@ class SessionDBAuth(SessionExpAuth):
         if len(user_sessions) == 0:
             return False
         user_sessions[0].remove()
-        super().destroy_session(self, request)
+        super().destroy_session(request)
