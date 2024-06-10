@@ -4,7 +4,7 @@ This project focuses on learning how to authenticate a user through session auth
 
 ## Tasks To Complete
 
-- **0. Et moi et moi et moi!**
+**0. Et moi et moi et moi!**
   - Copy all your work of the [0x06. Basic authentication](../0x01-Basic_authentication/) project in this new folder.
   - In this version, you implemented a **Basic authentication** for giving you access to all User endpoints:
     - `GET /api/v1/users`.
@@ -22,7 +22,7 @@ This project focuses on learning how to authenticate a user through session auth
       - If `<user_id>` is equal to `me` and `request.current_user` is not `None`: return the authenticated `User` in a JSON response (like a normal case of `GET /api/v1/users/<user_id>` where `<user_id>` is a valid `User` ID)
       - Otherwise, keep the same behavior.
 
-- **1. Empty session**
+**1. Empty session**
   - Create a class `SessionAuth` in [api/v1/auth/session_auth.py](api/v1/auth/session_auth.py) that inherits from `Auth`. For the moment this class will be empty. It's the first step for creating a new authentication mechanism:
     - Validate if everything inherits correctly without any overloading.
     - Validate the "switch" by using environment variables.
@@ -31,7 +31,7 @@ This project focuses on learning how to authenticate a user through session auth
     - Create an instance of `SessionAuth` and assign it to the variable auth
     Otherwise, keep the previous mechanism.
 
-- **2. Create a session**
+**2. Create a session**
   - Update `SessionAuth` class:
     - Create a class attribute `user_id_by_session_id` initialized by an empty dictionary.
     - Create an instance method `def create_session(self, user_id: str = None) -> str:` that creates a Session ID for a `user_id`:
@@ -44,7 +44,7 @@ This project focuses on learning how to authenticate a user through session auth
     - The same `user_id` can have multiple Session ID - indeed, the `user_id` is the value in the dictionary `user_id_by_session_id`.
   - Now you an "in-memory" Session ID storing. You will be able to retrieve an `User` id based on a Session ID.
 
-- **3. User ID for Session ID**
+**3. User ID for Session ID**
   - Update `SessionAuth` class:
   - Create an instance method `def user_id_for_session_id(self, session_id: str = None) -> str:` that returns a `User` ID based on a Session ID:
     - Return `None` if `session_id` is `None`.
@@ -53,19 +53,19 @@ This project focuses on learning how to authenticate a user through session auth
     - You must use `.get()` built-in for accessing in a dictionary a value based on key.
   - Now you have 2 methods (`create_session` and `user_id_for_session_id`) for storing and retrieving a link between a User ID and a Session ID.
 
-- **4. Session cookie**
+**4. Session cookie**
   - Update [api/v1/auth/auth.py](api/v1/auth/auth.py) by adding the method `def session_cookie(self, request=None):` that returns a cookie value from a request:
     - Return `None` if `request` is `None`.
     - Return the value of the cookie named `_my_session_id` from `request` - the name of the cookie must be defined by the environment variable `SESSION_NAME`.
     - You must use `.get()` built-in for accessing the cookie in the request cookies dictionary.
     - You must use the environment variable `SESSION_NAME` to define the name of the cookie used for the Session ID.
 
-- **5. Before request**
+**5. Before request**
   - Update the `@app.before_request` method in [api/v1/app.py](api/v1/app.py):
     - Add the URL path `/api/v1/auth_session/login/` in the list of excluded paths of the method `require_auth` - this route doesn't exist yet but it should be accessible outside authentication
     - If `auth.authorization_header(request)` and `auth.session_cookie(request)` return `None`, `abort(401)`
 
-- **6. Use Session ID for identifying a User**
+**6. Use Session ID for identifying a User**
   - Update `SessionAuth` class:
 
   - Create an instance method `def current_user(self, request=None):` (overload) that returns a `User` instance based on a cookie value:
@@ -74,7 +74,7 @@ This project focuses on learning how to authenticate a user through session auth
     - By using this User ID, you will be able to retrieve a `User` instance from the database - you can use `User.get(...)` for retrieving a `User` from the database.
   - Now, you will be able to get a User based on his session ID.
 
-- **7. New view for Session Authentication**
+**7. New view for Session Authentication**
   - Create a new Flask view that handles all routes for the Session authentication.
   - In the file [api/v1/views/session_auth.py](api/v1/views/session_auth.py), create a route `POST /auth_session/login` (= `POST /api/v1/auth_session/login`):
     - Slash tolerant (`/auth_session/login` == `/auth_session/login/`).
@@ -92,7 +92,7 @@ This project focuses on learning how to authenticate a user through session auth
   - In the file [api/v1/views/__init__.py](api/v1/views/__init__.py), you must add this new view at the end of the file.
   - Now you have an authentication based on a Session ID stored in cookie, perfect for a website (browsers love cookies).
 
-- **8. Logout**
+**8. Logout**
   - Update the class `SessionAuth` by adding a new method `def destroy_session(self, request=None):` that deletes the user session / logout:
     - If the `request` is equal to `None`, return `False`.
     - If the `request` doesn't contain the Session ID cookie, return `False` - you must use `self.session_cookie(request)`.
@@ -105,7 +105,7 @@ This project focuses on learning how to authenticate a user through session auth
       - If `destroy_session` returns `False`, `abort(404)`.
       - Otherwise, return an empty JSON dictionary with the status code `200`.
 
-- **9. Expiration?**
+**9. Expiration?**
   - Actually you have 2 authentication systems:
     - Basic authentication.
     - Session authentication.
@@ -131,7 +131,7 @@ This project focuses on learning how to authenticate a user through session auth
       - Otherwise, return `user_id` from the `session` dictionary.
   - Update [api/v1/app.py](api/v1/app.py) to instantiate `auth` with `SessionExpAuth` if the environment variable `AUTH_TYPE` is equal to `session_exp_auth`.
 
-- **10. Sessions in database**
+**10. Sessions in database**
   - Since the beginning, all Session IDs are stored in memory. It means, if your application stops, all Session IDs are lost.
   - To avoid that, you will create a new authentication system, based on Session ID stored in database (for us, it will be in a file, like `User`).
   - Create a new model `UserSession` in [models/user_session.py](models/user_session.py) that inherits from `Base`:
