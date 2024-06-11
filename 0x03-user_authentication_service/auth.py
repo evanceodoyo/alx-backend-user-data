@@ -106,6 +106,8 @@ class Auth:
         """Generates reset password token.
         Parameters:
           email (str): User email.
+        Return:
+          The generated password reset token (str).
         """
         user = None
         try:
