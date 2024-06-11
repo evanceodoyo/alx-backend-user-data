@@ -48,8 +48,11 @@ class Auth:
         Returns:
           True is user is valid, otherwise False.
         """
+        user = None
         try:
             user = self._db.find_user_by(email=email)
-            return bcrypt.checkpw(password.encode(), user.hashed_password)
+            if user is not None:
+                return bcrypt.checkpw(password.encode(), user.hashed_password)
         except NoResultFound:
             return False
+        return False
