@@ -5,20 +5,24 @@ from flask import Flask, jsonify, request
 from auth import Auth
 
 
-AUTH = Auth()
 app = Flask(__name__)
+AUTH = Auth()
 
 
 @app.route("/", methods=["GET"], strict_slashes=False)
 def home() -> str:
-    """Home
+    """GET /
+    Returns:
+      Home page payload.
     """
     return jsonify({"message": "Bienvenue"})
 
 
 @app.route("/users", methods=["POST"], strict_slashes=False)
 def users() -> str:
-    """Registers a new user.
+    """POST /users
+    Returns:
+      Account creation payload.
     """
     email = request.form.get("email")
     password = request.form.get("password")

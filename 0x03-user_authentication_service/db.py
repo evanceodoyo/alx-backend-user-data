@@ -34,18 +34,18 @@ class DB:
     def add_user(self, email: str, hashed_password: str) -> User:
         """Creates user
         Parameters:
-          email (str): user email
-          hashed_password (str): hashed user password
+          email (str): User email
+          hashed_password (str): Hashed user password
         Returns:
           User object
         """
-        try:
-            user = User(email=email, hashed_password=hashed_password)
-            self._session.add(user)
-            self._session.commit()
-        except Exception:
-            self._session.rollback()
-            user = None
+        user = User(email=email, hashed_password=hashed_password)
+        self._session.add(user)
+        self._session.commit()
+        # try:
+        # except Exception:
+        #     self._session.rollback()
+        #     user = None
         return user
 
     def find_user_by(self, **kwargs) -> User:
@@ -69,6 +69,8 @@ class DB:
     def update_user(self, user_id: int, **kwargs) -> None:
         """
         Updates a user based on user id.
+        Parameters:
+          user_id (int): User id
         Returns:
           None
         """
