@@ -8,14 +8,14 @@ app = Flask(__name__)
 AUTH = Auth()
 
 
-@app.route("/", methods=["GET"])
+@app.route("/", methods=["GET"], strict_slashes=False)
 def home() -> str:
     """Home
     """
     return jsonify({"message": "Bienvenue"})
 
 
-@app.route("/users", methods=["POST"])
+@app.route("/users", methods=["POST"], strict_slashes=False)
 def users() -> str:
     """Registers a new user.
     """
