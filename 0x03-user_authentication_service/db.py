@@ -48,7 +48,7 @@ class DB:
             user = None
         return user
 
-    def find_user_by(self, **kwargs):
+    def find_user_by(self, **kwargs) -> User:
         """Finds and returns first row found in the `users` table.
         """
         attributes = []
@@ -65,3 +65,18 @@ class DB:
         if result is None:
             raise NoResultFound()
         return result
+
+    def update_user(self, user_id: int, **kwargs) -> None:
+        """
+        Updates a user based on user id.
+        Returns:
+          None
+        """
+        user = self.find_user_by(id=user_id)
+        if user is None:
+            return
+        for key, value in kwargs.items():
+            if not hasattr(User, key):
+                raise ValueError()
+            setattr(user, key, value)
+        self._session.commit()
