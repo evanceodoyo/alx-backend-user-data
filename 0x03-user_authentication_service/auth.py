@@ -2,9 +2,9 @@
 """Authentication module.
 """
 import bcrypt
+from sqlalchemy.orm.exc import NoResultFound
 from db import DB
 from user import User
-from sqlalchemy.orm.exc import NoResultFound
 
 
 def _hash_password(password: str) -> bytes:
@@ -35,10 +35,7 @@ class Auth:
           User object.
         """
         try:
-            user = self._db.find_user_by(email=email)
-            if user is not None:
-                raise ValueError(f"User {email} already exists")
+            self._db.find_user_by(email=email)
         except NoResultFound:
-            hashed_pwd = _hash_password(password)
-            new_user = self._db.add_user(email, hashed_pwd)
-            return new_user
+            return self._db.add_user(email, _hash_password(password))
+        raise ValueError(f"User {email} already exists")
