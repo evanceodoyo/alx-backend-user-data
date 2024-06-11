@@ -4,8 +4,9 @@
 from flask import Flask, jsonify, request
 from auth import Auth
 
-app = Flask(__name__)
+
 AUTH = Auth()
+app = Flask(__name__)
 
 
 @app.route("/", methods=["GET"], strict_slashes=False)
@@ -21,8 +22,8 @@ def users() -> str:
     """
     email = request.form.get("email")
     password = request.form.get("password")
-    # if email is None or password is None:
-    #     return jsonify({"error": "email or password is missing"}), 400
+    if email is None or password is None:
+        return jsonify({"error": "email or password is missing"}), 400
     try:
         AUTH.register_user(email, password)
         return jsonify({"email": email, "message": "user created"})
