@@ -85,7 +85,7 @@ def profile() -> str:
 def get_reset_password_token() -> str:
     """POST /reset_password
     Returns:
-     Generated passowrd reset token.
+     Generated reset passowrd token.
     """
     reset_token = None
     email = request.form.get("email")
