@@ -78,7 +78,7 @@ def profile_logged(session_id: str) -> None:
 
 
 def log_out(session_id: str) -> None:
-    """Test DELETE /logout.
+    """Test DELETE /sessions.
     Parameters:
       session_id (str): User session ID.
     Returns:
